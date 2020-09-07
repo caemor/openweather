@@ -37,6 +37,7 @@ pub struct Main {
     pub temp_min: f32,
     pub temp_max: f32,
     pub pressure: f32,
+    pub feels_like: f32,
     #[serde(default)]
     pub sea_level: Option<f32>,
     #[serde(default)]
@@ -71,6 +72,8 @@ pub struct Rain {
     /// Rain volume in mm
     #[serde(rename = "3h")]
     pub three_h: Option<f32>,
+    #[serde(rename = "1h")]
+    pub one_h: Option<f32>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Default)]
@@ -78,6 +81,8 @@ pub struct Snow {
     /// Snow volume
     #[serde(rename = "3h")]
     pub three_h: Option<f32>,
+    #[serde(rename = "1h")]
+    pub one_h: Option<f32>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Default)]
@@ -268,7 +273,7 @@ mod tests {
     #[test]
     /// This test/derive once failed
     fn current_weather_derive_failure_1() {
-        let der_string = "{\"coord\":{\"lon\":10.45,\"lat\":49.57},\"weather\":[{\"id\":801,\"main\":\"Clouds\",\"description\":\"Ein paar Wolken\",\"icon\":\"02d\"}],\"base\":\"stations\",\"main\":{\"temp\":2.94,\"pressure\":998,\"humidity\":86,\"temp_min\":1.67,\"temp_max\":3.89},\"visibility\":10000,\"wind\":{\"speed\":1},\"clouds\":{\"all\":20},\"dt\":1573810268,\"sys\":{\"type\":1,\"id\":1274,\"country\":\"DE\",\"sunrise\":1573799471,\"sunset\":1573832742},\"timezone\":3600,\"id\":2820859,\"name\":\"Berlin\",\"cod\":200}";
+        let der_string = "{\"coord\":{\"lon\":10.45,\"lat\":49.57},\"weather\":[{\"id\":801,\"main\":\"Clouds\",\"description\":\"Ein paar Wolken\",\"icon\":\"02d\"}],\"base\":\"stations\",\"main\":{\"temp\":2.94,\"pressure\":998,\"humidity\":86,\"temp_min\":1.67,\"temp_max\":3.89,\"feels_like\":3.20},\"visibility\":10000,\"wind\":{\"speed\":1},\"clouds\":{\"all\":20},\"dt\":1573810268,\"sys\":{\"type\":1,\"id\":1274,\"country\":\"DE\",\"sunrise\":1573799471,\"sunset\":1573832742},\"timezone\":3600,\"id\":2820859,\"name\":\"Berlin\",\"cod\":200}";
 
         let weather_report: WeatherReportCurrent =
             serde_json::from_str(&der_string).expect("current weather derive failure testcase 1");
@@ -291,6 +296,7 @@ mod tests {
                 humidity: 86.0,
                 temp_min: 1.67,
                 temp_max: 3.89,
+                feels_like: 3.20,
                 ..Default::default()
             },
             visibility: Some(10000),
